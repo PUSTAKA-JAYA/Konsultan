@@ -1,4 +1,4 @@
-function sendMessage() {
+async function sendMessage() {
     const userInput = document.getElementById('user-input');
     const message = userInput.value.trim();
     if (message === "") return;
@@ -6,10 +6,8 @@ function sendMessage() {
     appendMessage('user', message);
     userInput.value = '';
 
-    const response = getConsultantResponse(message);
-    setTimeout(() => {
-        appendMessage('consultant', response);
-    }, 1000);
+    const response = await getConsultantResponse(message);
+    appendMessage('consultant', response);
 }
 
 function appendMessage(sender, message) {
@@ -21,14 +19,21 @@ function appendMessage(sender, message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function getConsultantResponse(userInput) {
-    if (userInput.toLowerCase().includes("harga")) {
-        return "Harga produk kami berkisar antara Rp 100.000 hingga Rp 1.000.000.";
-    } else if (userInput.toLowerCase().includes("kualitas")) {
-        return "Kami menjamin kualitas terbaik untuk semua produk kami.";
-    } else if (userInput.toLowerCase().includes("pengiriman")) {
-        return "Pengiriman biasanya memakan waktu 3-5 hari kerja.";
-    } else {
-        return "Maaf, saya tidak mengerti pertanyaan Anda. Bisa dijelaskan lebih detail?";
-    }
+async function getConsultantResponse(userInput) {
+    const apiKey = 'YOUR_OPENAI_API_KEY'; // Ganti dengan API key Anda
+
+    const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            prompt: userInput,
+            max_tokens: 150
+        })
+    });
+
+    const data = await response.json();
+    return data.choices[0].text.trim();
 }
