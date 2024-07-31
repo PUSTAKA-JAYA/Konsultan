@@ -20,7 +20,7 @@ function appendMessage(sender, message) {
 }
 
 async function getConsultantResponse(userInput) {
-    const apiKey = 'YOUR_OPENAI_API_KEY'; // Ganti dengan API key Anda
+    const apiKey = 'org-6ta1DPxugKTYZRAqv8DK10jV'; // Ganti dengan API key Anda
 
     const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
         method: 'POST',
